@@ -134,6 +134,12 @@ type SubnetPropertiesFormat struct {
 	IPAllocationMethod IPAllocationMethod `json:"ipAllocationMethod,omitempty"`
 	// Vlan
 	Vlan *uint16 `json:"vlan,omitempty"`
+	// Reserved IP's
+	ReservedIPs []string
+	// Vip Pool Start IP
+	VipPoolStartIP string
+	// Vip Pool End IP
+	VipPoolEndIP string
 }
 
 // MACRange is associated with MACPool and respresents the start and end addresses.

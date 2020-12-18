@@ -118,6 +118,9 @@ func getWssdNetworkSubnets(subnets *[]network.Subnet) (wssdsubnets []*wssdcloudn
 		}
 		wssdsubnet.Routes = wssdsubnetRoutes
 		wssdsubnet.Allocation = ipAllocationMethodSdkToProtobuf(subnet.IPAllocationMethod)
+		wssdsubnet.Vippoolstartip = subnet.VipPoolStartIP
+		wssdsubnet.Vippoolendip = subnet.VipPoolEndIP
+		wssdsubnet.Reserverdips = subnet.ReservedIPs
 		wssdsubnets = append(wssdsubnets, wssdsubnet)
 	}
 
@@ -212,6 +215,9 @@ func getNetworkSubnets(wssdsubnets []*wssdcloudnetwork.Subnet) *[]network.Subnet
 				// TODO: implement something for IPConfigurationReferences
 				IPAllocationMethod: ipAllocationMethodProtobufToSdk(subnet.Allocation),
 				Vlan:               getVlan(subnet.Vlan),
+				ReservedIPs:        subnet.Reserverdips,
+				VipPoolStartIP:     subnet.Vippoolstartip,
+				VipPoolEndIP:       subnet.Vippoolendip,
 			},
 		})
 	}
