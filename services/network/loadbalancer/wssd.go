@@ -188,6 +188,12 @@ func getWssdLoadBalancer(networkLB *network.LoadBalancer, group string) (wssdClo
 						wssdCloudLB.Networkid = *subnet.ID
 					}
 				}
+				if fipcf.VirtualNetworkName != nil {
+					wssdCloudLB.Virtualnetworkname = *fipcf.VirtualNetworkName
+				}
+				if fipcf.SubnetName != nil {
+					wssdCloudLB.Subnetname = *fipcf.SubnetName
+				}
 				if fipcf.IPAddress != nil {
 					wssdCloudLB.FrontendIP = *fipcf.IPAddress
 				}
@@ -264,6 +270,13 @@ func getLoadBalancer(wssdLB *wssdcloudnetwork.LoadBalancer) (networkLB *network.
 		if len(wssdLB.Networkid) != 0 {
 			frontendipconfigurations[0].FrontendIPConfigurationPropertiesFormat.Subnet = &network.Subnet{ID: &wssdLB.Networkid}
 		}
+		if len(wssdLB.Virtualnetworkname) != 0 {
+			frontendipconfigurations[0].FrontendIPConfigurationPropertiesFormat.VirtualNetworkName = &wssdLB.Virtualnetworkname
+		}
+		if len(wssdLB.Subnetname) != 0 {
+			frontendipconfigurations[0].FrontendIPConfigurationPropertiesFormat.SubnetName = &wssdLB.Subnetname
+		}
+
 		networkLB.LoadBalancerPropertiesFormat.FrontendIPConfigurations = &frontendipconfigurations
 	}
 

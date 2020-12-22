@@ -96,15 +96,20 @@ func getWssdNetworkSubnets(subnets *[]network.Subnet) (wssdsubnets []*wssdcloudn
 		wssdsubnet := &wssdcloudnetwork.Subnet{
 			Name: *subnet.Name,
 		}
+		if subnet.ID != nil {
+			wssdsubnet.Id = *subnet.ID
+		}
+		if subnet.SubnetPropertiesFormat == nil {
+			continue
+		}
 
-		if subnet.SubnetPropertiesFormat != nil && subnet.IPAllocationMethod == network.Static {
+		if subnet.IPAllocationMethod == network.Static {
 			if subnet.AddressPrefix == nil {
 				err = errors.Wrapf(errors.InvalidInput, "AddressPrefix is missing")
 				return
 			}
 			wssdsubnet.Cidr = *subnet.AddressPrefix
 		}
-
 		if subnet.Vlan == nil {
 			wssdsubnet.Vlan = 0
 		} else {
@@ -118,8 +123,6 @@ func getWssdNetworkSubnets(subnets *[]network.Subnet) (wssdsubnets []*wssdcloudn
 		}
 		wssdsubnet.Routes = wssdsubnetRoutes
 		wssdsubnet.Allocation = ipAllocationMethodSdkToProtobuf(subnet.IPAllocationMethod)
-		wssdsubnet.Vippoolstartip = subnet.VipPoolStartIP
-		wssdsubnet.Vippoolendip = subnet.VipPoolEndIP
 		wssdsubnet.Reserverdips = subnet.ReservedIPs
 		wssdsubnets = append(wssdsubnets, wssdsubnet)
 	}
@@ -216,8 +219,6 @@ func getNetworkSubnets(wssdsubnets []*wssdcloudnetwork.Subnet) *[]network.Subnet
 				IPAllocationMethod: ipAllocationMethodProtobufToSdk(subnet.Allocation),
 				Vlan:               getVlan(subnet.Vlan),
 				ReservedIPs:        subnet.Reserverdips,
-				VipPoolStartIP:     subnet.Vippoolstartip,
-				VipPoolEndIP:       subnet.Vippoolendip,
 			},
 		})
 	}

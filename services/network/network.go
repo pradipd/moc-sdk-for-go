@@ -135,11 +135,7 @@ type SubnetPropertiesFormat struct {
 	// Vlan
 	Vlan *uint16 `json:"vlan,omitempty"`
 	// Reserved IP's
-	ReservedIPs []string
-	// Vip Pool Start IP
-	VipPoolStartIP string
-	// Vip Pool End IP
-	VipPoolEndIP string
+	ReservedIPs []string `json:"reservedips,omitempty"`
 }
 
 // MACRange is associated with MACPool and respresents the start and end addresses.
@@ -227,7 +223,9 @@ type FrontendIPConfigurationPropertiesFormat struct {
 	// IPAddress - The ip address of the frontend
 	IPAddress *string `json:"ipAddress,omitempty"`
 	// State - State
-	Statuses map[string]*string `json:"statuses"`
+	Statuses           map[string]*string `json:"statuses"`
+	VirtualNetworkName *string            `json:"virtualNetworkName,omitempty"`
+	SubnetName         *string            `json:"subnetName,omitempty"`
 }
 
 // FrontendIPConfiguration frontend IP address of the load balancer.
@@ -661,7 +659,9 @@ type InterfaceIPConfigurationPropertiesFormat struct {
 	// ProvisioningState - The provisioning state of the network interface IP configuration. Possible values are: 'Updating', 'Deleting', and 'Failed'.
 	ProvisioningState *string `json:"provisioningState,omitempty"`
 	// State - State
-	Statuses map[string]*string `json:"statuses"`
+	Statuses           map[string]*string `json:"statuses"`
+	VirtualNetworkName *string            `json:"virtualNetworkName,omitempty"`
+	SubnetName         *string            `json:"subnetName,omitempty"`
 }
 
 // InterfaceIPConfiguration iPConfiguration in a network interface.
