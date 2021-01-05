@@ -165,7 +165,7 @@ func (c *client) getVirtualMachineScaleSetNetworkConfigurationIpConfiguration(ni
 	return &compute.VirtualMachineScaleSetIPConfiguration{
 		VirtualMachineScaleSetIPConfigurationProperties: &compute.VirtualMachineScaleSetIPConfigurationProperties{
 			Subnet: &compute.APIEntityReference{
-				ID: &nic.Subnetid,
+				ID: &nic.SubnetidXXX,
 			},
 		},
 	}, nil
@@ -424,8 +424,8 @@ func (c *client) getWssdVirtualMachineScaleSetNetworkConfigurationNetworkInterfa
 	}
 
 	return &wssdcloudnetwork.IpConfiguration{
-		Primary:  primary,
-		Subnetid: *ipconfig.Subnet.ID,
+		Primary:     primary,
+		SubnetidXXX: *ipconfig.Subnet.ID,
 	}, nil
 }
 

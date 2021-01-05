@@ -97,7 +97,7 @@ func getWssdNetworkSubnets(subnets *[]network.Subnet) (wssdsubnets []*wssdcloudn
 			Name: *subnet.Name,
 		}
 		if subnet.ID != nil {
-			wssdsubnet.Id = *subnet.ID
+			wssdsubnet.Idxxx = *subnet.ID
 		}
 		if subnet.SubnetPropertiesFormat == nil {
 			continue
@@ -211,7 +211,7 @@ func getNetworkSubnets(wssdsubnets []*wssdcloudnetwork.Subnet) *[]network.Subnet
 	for _, subnet := range wssdsubnets {
 		subnets = append(subnets, network.Subnet{
 			Name: &subnet.Name,
-			ID:   &subnet.Id,
+			ID:   &subnet.Idxxx,
 			SubnetPropertiesFormat: &network.SubnetPropertiesFormat{
 				AddressPrefix: &subnet.Cidr,
 				RouteTable:    getNetworkRoutetable(subnet.Routes),

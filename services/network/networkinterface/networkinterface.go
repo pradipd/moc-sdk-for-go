@@ -105,16 +105,31 @@ func getWssdNetworkInterfaceIPConfig(ipConfig *network.InterfaceIPConfiguration)
 	if ipConfig.InterfaceIPConfigurationPropertiesFormat == nil {
 		return nil, errors.Wrapf(errors.InvalidConfiguration, "Missing Interface IPConfiguration Properties")
 	}
+	/*
+		if ipConfig.Subnet == nil ||
+			ipConfig.Subnet.ID == nil ||
+			len(*ipConfig.Subnet.ID) == 0 {
+			return nil, errors.Wrapf(errors.InvalidConfiguration, "Missing Subnet Reference")
+		}
+	*/
+	wssdipconfig := &wssdcloudnetwork.IpConfiguration{}
 
-	if ipConfig.Subnet == nil ||
-		ipConfig.Subnet.ID == nil ||
-		len(*ipConfig.Subnet.ID) == 0 {
-		return nil, errors.Wrapf(errors.InvalidConfiguration, "Missing Subnet Reference")
+	if ipConfig.VirtualNetworkName != nil {
+		wssdipconfig.Virtualnetworkname = *ipConfig.VirtualNetworkName
+	}
+	if ipConfig.SubnetName != nil {
+		wssdipconfig.Subnetname = *ipConfig.SubnetName
+	}
+	//If the user didn't specify a virtual network name check if they specified a subnet id.
+	//previous versions specified the vnet name in the subnet id field.
+	if wssdipconfig.Virtualnetworkname == "" {
+		if ipConfig.Subnet != nil &&
+			ipConfig.Subnet.ID != nil &&
+			len(*ipConfig.Subnet.ID) == 0 {
+			wssdipconfig.Virtualnetworkname = *ipConfig.Subnet.ID
+		}
 	}
 
-	wssdipconfig := &wssdcloudnetwork.IpConfiguration{
-		Subnetid: *ipConfig.Subnet.ID,
-	}
 	if ipConfig.PrivateIPAddress != nil {
 		wssdipconfig.Ipaddress = *ipConfig.PrivateIPAddress
 	}
@@ -175,10 +190,12 @@ func getDns(dnssetting *network.InterfaceDNSSettings) *wssdcommonproto.Dns {
 func getNetworkIpConfig(wssdcloudipconfig *wssdcloudnetwork.IpConfiguration) *network.InterfaceIPConfiguration {
 	ipconfig := &network.InterfaceIPConfiguration{
 		InterfaceIPConfigurationPropertiesFormat: &network.InterfaceIPConfigurationPropertiesFormat{
-			PrivateIPAddress: &wssdcloudipconfig.Ipaddress,
-			Subnet:           &network.APIEntityReference{ID: &wssdcloudipconfig.Subnetid},
-			Gateway:          &wssdcloudipconfig.Gateway,
-			PrefixLength:     &wssdcloudipconfig.Prefixlength,
+			PrivateIPAddress:   &wssdcloudipconfig.Ipaddress,
+			Subnet:             &network.APIEntityReference{ID: &wssdcloudipconfig.SubnetidXXX},
+			Gateway:            &wssdcloudipconfig.Gateway,
+			PrefixLength:       &wssdcloudipconfig.Prefixlength,
+			VirtualNetworkName: &wssdcloudipconfig.Virtualnetworkname,
+			SubnetName:         &wssdcloudipconfig.Subnetname,
 		},
 	}
 

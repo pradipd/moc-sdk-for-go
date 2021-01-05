@@ -257,7 +257,7 @@ func getLoadBalancer(wssdLB *wssdcloudnetwork.LoadBalancer) (networkLB *network.
 		networkLB.LoadBalancerPropertiesFormat.BackendAddressPools = &backendAddressPools
 	}
 
-	if len(wssdLB.FrontendIP) != 0 || len(wssdLB.Networkid) != 0 {
+	if len(wssdLB.FrontendIP) != 0 || len(wssdLB.Networkid) != 0 || len(wssdLB.Virtualnetworkname) != 0 || len(wssdLB.Subnetname) != 0 {
 
 		frontendipconfigurations := []network.FrontendIPConfiguration{
 			{
