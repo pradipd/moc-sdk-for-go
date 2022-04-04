@@ -14,6 +14,7 @@ import (
 	"github.com/microsoft/moc/pkg/auth"
 	"github.com/microsoft/moc/pkg/errors"
 	"github.com/microsoft/moc/pkg/status"
+	"github.com/microsoft/moc/pkg/tags"
 	wssdcloudnetwork "github.com/microsoft/moc/rpc/cloudagent/network"
 	wssdcloudcommon "github.com/microsoft/moc/rpc/common"
 )
@@ -157,6 +158,7 @@ func getWssdLoadBalancer(networkLB *network.LoadBalancer, group string) (wssdClo
 	wssdCloudLB = &wssdcloudnetwork.LoadBalancer{
 		Name:      *networkLB.Name,
 		GroupName: group,
+		Tags:      tags.MapToProto(networkLB.Tags),
 	}
 
 	if networkLB.Version != nil {
@@ -239,6 +241,7 @@ func getLoadBalancer(wssdLB *wssdcloudnetwork.LoadBalancer) (networkLB *network.
 			Statuses:         status.GetStatuses(wssdLB.GetStatus()),
 			ReplicationCount: wssdLB.GetReplicationCount(),
 		},
+		Tags: tags.ProtoToMap(wssdLB.Tags),
 	}
 
 	if len(wssdLB.Backendpoolnames) > 0 {
